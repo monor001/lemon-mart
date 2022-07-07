@@ -7,7 +7,10 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'manager', children: managerModuleRouts },
+  {
+    path: 'manager',
+    loadChildren: () => import('./manager/manager.module').then((m) => m.ManagerModule),
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ]

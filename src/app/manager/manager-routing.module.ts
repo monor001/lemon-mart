@@ -7,7 +7,7 @@ export const managerModuleRouts: Routes = [{ path: '', component: ManagerHomeCom
 
 const routes: Routes = [
   { path: '', redirectTo: '/manager/home', pathMatch: 'full' },
-  { path: '', component: ManagerHomeComponent },
+  { path: 'home', component: ManagerHomeComponent },
 ]
 
 @NgModule({
