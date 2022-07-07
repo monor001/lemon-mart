@@ -20,7 +20,6 @@ import { UserModule } from './user/user.module'
     AppRoutingModule,
     MaterialModule,
     FlexLayoutModule,
-    ManagerModule,
     InventoryModule,
     PosModule,
     UserModule,
