@@ -14,6 +14,17 @@ const routes: Routes = [
     path: 'user',
     loadChildren: () => import('./user/user.module').then((u) => u.UserModule),
   },
+  {
+    path: 'pos',
+    loadChildren: () => import('./pos/pos.module').then((pos) => pos.PosModule),
+  },
+  {
+    path: 'inventory',
+    loadChildren: () =>
+      import('./inventory/inventory.module').then(
+        (inventory) => inventory.InventoryModule
+      ),
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ]
