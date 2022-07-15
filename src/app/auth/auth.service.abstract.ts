@@ -28,7 +28,7 @@ export abstract class AuthService extends CahceService implements IAuthService {
       tap((status) => this.authStatus$.next(status)),
       filter((status: IAuthStatus) => status.isAuthenticated),
       mergeMap(() => this.getCurrentUser()),
-      map((user) => this.currentUser$.next(user)),
+      map((user: IUser) => this.currentUser$.next(user)),
       catchError(transformError)
     )
     loginResponse$.subscribe({

@@ -73,8 +73,8 @@ export class InMemoryAuthService extends AuthService {
     } as IServerAuthResponse
     return of(authResposne)
   }
-  protected transformJwtToken(token: unknown): IAuthStatus {
-    throw new Error('Method not implemented.')
+  protected transformJwtToken(token: IAuthStatus): IAuthStatus {
+    return token
   }
   protected getCurrentUser(): Observable<IUser> {
     return of(this.defaultUser)
