@@ -1,10 +1,11 @@
-import { HttpClientModule } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 import { NgModule } from '@angular/core'
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { BrowserModule } from '@angular/platform-browser'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
+import { AuthHttpInterceptor } from './auth/auth-http-interceptor'
 import { AuthService } from './auth/auth.service.abstract'
 import { InMemoryAuthService } from './auth/in-memory-auth/in-memory-auth.service'
 import { HomeComponent } from './home/home.component'
@@ -24,6 +25,11 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     {
       provide: AuthService,
       useClass: InMemoryAuthService,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthHttpInterceptor,
+      multi: true,
     },
   ],
   bootstrap: [AppComponent],

@@ -14,8 +14,28 @@ import { CahceService } from './cash.service'
 export abstract class AuthService extends CahceService implements IAuthService {
   readonly authStatus$ = new BehaviorSubject<IAuthStatus>(defaultAuthStatus)
   readonly currentUser$ = new BehaviorSubject<IUser>(new User())
+
   constructor() {
     super()
+    if (this.hasExpiredToken()) {
+      this.logout()
+    } else {
+      this.authStatus$.next(this.getAuthFromToken())
+      setTimeout(() => this.resumeCurrentUser$.subscribe(), 0)
+    }
+  }
+  private getAndUpdateUserIfAuthenticated = pipe(
+    filter((status: IAuthStatus) => status.isAuthenticated),
+    mergeMap(() => this.getCurrentUser()),
+    map((user: IUser) => this.currentUser$.next(user)),
+    catchError(transformError)
+  )
+  protected readonly resumeCurrentUser$ = this.authStatus$.pipe(
+    this.getAndUpdateUserIfAuthenticated
+  )
+
+  protected getAuthFromToken(): IAuthStatus {
+    return this.transformJwtToken(decode(this.getToken()))
   }
   login(email: string, password: string): Observable<void> {
     this.clearToken()
@@ -26,10 +46,7 @@ export abstract class AuthService extends CahceService implements IAuthService {
         return this.transformJwtToken(token)
       }),
       tap((status) => this.authStatus$.next(status)),
-      filter((status: IAuthStatus) => status.isAuthenticated),
-      mergeMap(() => this.getCurrentUser()),
-      map((user: IUser) => this.currentUser$.next(user)),
-      catchError(transformError)
+      this.getAndUpdateUserIfAuthenticated
     )
     loginResponse$.subscribe({
       error: (err) => {
@@ -54,6 +71,15 @@ export abstract class AuthService extends CahceService implements IAuthService {
   }
   protected clearToken() {
     this.removeItem('jwt')
+  }
+
+  protected hasExpiredToken() {
+    const jwt = this.getToken()
+    if (jwt) {
+      const payload = decode(jwt) as any
+      return Date.now() >= payload.expr * 1000
+    }
+    return true
   }
 
   protected abstract authProvider(
