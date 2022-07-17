@@ -10,19 +10,7 @@ import { AuthService } from '../auth/auth.service.abstract'
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(public authService: AuthService) {}
 
   ngOnInit(): void {}
-
-  login() {
-    this.authService.login('manager@test.com', '123432')
-    combineLatest([this.authService.authStatus$, this.authService.currentUser$])
-      .pipe(
-        filter(([authStatus, user]) => authStatus.isAuthenticated && user?._id !== ''),
-        tap(([authStatus, user]) => {
-          this.router.navigate(['/manager'])
-        })
-      )
-      .subscribe()
-  }
 }

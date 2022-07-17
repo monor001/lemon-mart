@@ -1,5 +1,6 @@
-<div fxLayout="column" fxLayoutAlign="center center" class="myClass">
-  <span class="mat-display-2">Hello, Limonca!</span>
-  <button mat-raised-button color="primary" (click)="login()">Login as
-    Manager</button>
+<div *ngIf="(authService.authStatus$ | async)?.isAuthenticated; else doLogin">
+  <div class="mat-display-4">This is LemonMart! The place where</div>
 </div>
+<ng-template #doLogin>
+  <app-login></app-login>
+</ng-template>

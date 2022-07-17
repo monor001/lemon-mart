@@ -1,5 +1,8 @@
-<mat-toolbar color="primary" fxLayoutGap="8px">
-  <button mat-icon-button>
+<mat-toolbar color="primary" fxLayoutGap="8px" *ngIf="{
+  status: authService.authStatus$ | async,
+  user: authService.currentUser$ | async
+} as auth;">
+  <button mat-icon-button *ngIf="auth?.status?.isAuthenticated">
     <mat-icon>menu</mat-icon>
   </button>
   <a mat-button routerLink="/home">
@@ -8,12 +11,13 @@
   </a>
   <span class="flex-spacer"></span>
   <button mat-mini-fab matTooltip="Profile" routerLink="/user/profile"
-    aria-label="User Profile">
+    aria-label="User Profile" *ngIf="auth?.status?.isAuthenticated">
     <mat-icon>
       account_circle
     </mat-icon>
   </button>
-  <button mat-mini-fab matTooltip="Logout" routerLink="user/logout" aria-label="Logout">
+  <button mat-mini-fab matTooltip="Logout" routerLink="user/logout" aria-label="Logout"
+    *ngIf="auth?.status?.isAuthenticated">
     <mat-icon>
       lock_open
     </mat-icon>
